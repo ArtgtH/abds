@@ -1,0 +1,6 @@
+data/
+volume/
+.git/
+.idea/
+__pycache__/
+*.pyc
