@@ -1,22 +1,26 @@
-.PHONY: run rund services stop clean
-.DEFAULT_GOAL = run
+.PHONY: run stop gen load setup teardown clean
+.DEFAULT_GOAL := run
 
-# Runs all services in detached mode.
+include .env.local
+export CLICKHOUSE_HOST CLICKHOUSE_HTTP_PORT CLICKHOUSE_USER CLICKHOUSE_PASSWORD CLICKHOUSE_DATABASE
+
 run:
 	docker compose --env-file .env.local up -d --build
 
-# Runs all services without detached mode (for debugging).
-rund:
-	docker compose --env-file .env.local up --build
-
-# Shows all service statuses.
-services:
-	docker compose ps
-
-# Stops all running services.
 stop:
-	docker compose down
+	docker compose --env-file .env.local down
 
-# Cleans up all resources including volumes.
+gen:
+	python3 scripts/generate.py
+
+load:
+	python3 scripts/database.py create
+	python3 scripts/database.py load
+
+setup: gen load
+
+teardown:
+	python3 scripts/database.py drop
+
 clean:
-	docker compose down -v
+	docker compose --env-file .env.local down -v

@@ -86,6 +86,10 @@ venv/
 env/
 .venv/
 
+# Generated ClickHouse data and datasets
+data/
+volume/
+
 # Node.js
 node_modules/
 npm-debug.log*
